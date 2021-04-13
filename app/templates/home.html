@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    Welcome from home
+
+    {% load i18n %}
+    <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+        {% get_current_language as LANGUAGE_CODE %}                                         
+        <input name="next" type="hidden" value="{{ request.get_full_path|slice:'3:' }}">
+        {% if LANGUAGE_CODE == 'ar' %}
+            <button type='submit' name='language' value='en' class="icon solid fa-language">
+                <span class="label"></span>English
+            </button>
+        {% else %}
+            <button type='submit' name='language' value='ar' class="icon solid fa-language">
+                <span class="label"></span>عربي
+            </button>
+        {% endif %}
+    </form>
+
+    {% for flower in flowers %}
+                                    <article>
+                                        <a href="#" class="image"><img src="{{ flower.image.url }}" alt="" /></a>
+                                        {% if LANGUAGE_CODE == 'ar' %}
+                                            <h3>{{ flower.title_ar }}</h3>
+                                            <p>{{ flower.description_ar }}</p>
+                                        {% else %}
+                                            <h3>{{ flower.title }}</h3>
+                                            <p>{{ flower.description }}</p>
+                                        {% endif %}
+                                        <ul class="actions">
+                                            <li><a href="{% url 'flower-detail' flower.id %}" class="button">
+                                                {% trans 'More' %}
+                                            </a></li>
+                                        </ul>
+                                    </article>
+                                    {% endfor %}
+</body>
+</html>
